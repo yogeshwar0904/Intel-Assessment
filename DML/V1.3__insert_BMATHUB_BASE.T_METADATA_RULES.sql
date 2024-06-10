@@ -1,0 +1,6 @@
+insert into Build_SIM_BOM."BMATHUB_XFRM".V_METADATA_RULES (
+    ITEM_CLASS_NM,
+    LOCATION_ID 
+ ) VALUES
+    ('IC', 'VF_FG'),
+    ('UPI_DIE_PREP', 'VF_DP');
