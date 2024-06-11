@@ -1,16 +1,5 @@
-INSERT INTO ORDER_PROCESS."ORDER_BASE".T_PROMOTION (
-    PROMOTION_ID,
-    CUSTOMER_CATEGORY,
-    PROMOTION_TYPE,
-    PROMOTION_VALUE,
-    COMMENT
-) VALUES
-    ('1001', 'Gold', 'Discount', 5, 'PERCENT'),
-    ('1002', 'Silver', 'Discount', 3, 'PERCENT'),
-    ('1003', 'Bronze', 'Discount', 1, 'PERCENT'),
-    ('1004', 'Regular', 'Coupon_X', 0.03, 'AMOUNT'),
-    ('1005', 'Regular', 'Coupon_Y', 0.02, 'AMOUNT'),
-    ('1006', 'Regular', 'Coupon_Z', 0.01, 'AMOUNT'),
-    ('1007', 'Gold', 'Loyalty', 100, 'POINTS/1000 SPENT'),
-    ('1008', 'Silver', 'Loyalty', 50, 'POINTS/1000 SPENT'),
-    ('1009', 'Bronze', 'Loyalty', 30, 'POINTS/1000 SPENT');
+CREATE OR REPLACE STAGE Build_SIM_BOM."MASTER_DATA".STAGE_ORIG_BOM;
+PUT file://C:/Users/yogeshwar.s/Desktop/ORIG_BOM.csv @Build_SIM_BOM."MASTER_DATA".STAGE_ORIG_BOM;
+COPY INTO Build_SIM_BOM."MASTER_DATA".ORIG_BOM 
+FROM @Build_SIM_BOM."MASTER_DATA".STAGE_ORIG_BOM/ORIG_BOM.csv
+FILE_FORMAT = (FORMAT_NAME = 'FORMATE', TYPE = CSV);
