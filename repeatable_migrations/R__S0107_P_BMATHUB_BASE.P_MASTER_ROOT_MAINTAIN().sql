@@ -50,27 +50,35 @@ BEGIN
         );
     MERGE INTO 
         Build_SIM_BOM."BMATHUB_BASE".T_ORIG_BOM AS TGT
-    USING  
-        Build_SIM_BOM."MASTER_DATA".ORIG_BOM AS SRC
-    ON 
-        TGT.INPUT_ITEM_ID = SRC.INPUT_ITEM_ID 
-    AND TGT.OUTPUT_ITEM_ID = SRC.OUTPUT_ITEM_ID  
-    WHEN MATCHED THEN 
-        UPDATE SET
-            TGT.ITEM_CLASS_NM = SRC.ITEM_CLASS_NM,
-            TGT.LOC = SRC.LOC
-    WHEN NOT MATCHED THEN 
-        INSERT (
-            INPUT_ITEM_ID,
-            ITEM_CLASS_NM,
-            OUTPUT_ITEM_ID,
-            LOC  
-        ) VALUES (
-            SRC.INPUT_ITEM_ID,
-            SRC.ITEM_CLASS_NM,
-            SRC.OUTPUT_ITEM_ID,
-            SRC.LOC 
-        );
+    USING (
+        SELECT 
+            BOM.INPUT_ITEM_ID,
+            BOM.ITEM_CLASS_NM,
+            BOM.OUTPUT_ITEM_ID,
+            ROOT.LOCATION_ID
+        FROM Build_SIM_BOM."MASTER_DATA".ORIG_BOM AS BOM
+        JOIN Build_SIM_BOM."MASTER_DATA".LOCATION AS ROOT 
+        ON BOM.INPUT_ITEM_ID = ROOT.ITEM_ID
+        ) AS SRC
+        ON  TGT.INPUT_ITEM_ID = SRC.INPUT_ITEM_ID
+        WHEN MATCHED THEN 
+             UPDATE SET
+                TGT.ITEM_CLASS_NM = SRC.ITEM_CLASS_NM,
+                TGT.OUTPUT_ITEM_ID = SRC.OUTPUT_ITEM_ID,
+                TGT.LOC = SRC.LOCATION_ID
+        WHEN NOT MATCHED THEN 
+             INSERT (
+                INPUT_ITEM_ID,
+                ITEM_CLASS_NM,
+                OUTPUT_ITEM_ID,
+                LOC  
+            ) VALUES (
+                SRC.INPUT_ITEM_ID,
+                SRC.ITEM_CLASS_NM,
+                SRC.OUTPUT_ITEM_ID,
+                SRC.LOCATION_ID
+    );
+
     RETURN 'Data Insert into table successfully';
 END;
 $$;
